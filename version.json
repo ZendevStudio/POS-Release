@@ -1,6 +1,7 @@
 {
-  "version": "1.44.2",
-  "notes": "- **结账/作废后去向**:`afterOrderState` 与登录同口径 —— 本机设备模式优先,其次后台「默认点单方式」;选等取/自取/外卖 → 直接开新单留在点单页,堂吃 → 回桌台图;零售/美容美甲一律开新单(原来会误回桌台)。后台「默认点单方式」点一下即保存(不用再按 Save)。\n- **找单**:每次打开都重置为「今天」;**未结账的单也按日期筛**(原来点「今天」对未结账无效);当前日期快捷键高亮;不显示没菜没桌的空白单。新增**支付方式筛选**(全部/现金/信用卡/礼卡/会员卡/支票/挂账/套餐/自定义/混合支付,带单数),可与类型、日期叠加;分单混付的单按其中任一方式都能筛到。\n- **旗舰点单页按键全部加大**(触屏):顶栏 58px、功能条 78px、送厨/结账 80px、账单行数量键 42px、行内操作 50px、分类/菜品卡/字号整体放大;弹出菜单、选做法、来电卡同步加大;≤1440 宽自动收拢店名和「桌台」文字。",
-  "zip": "https://github.com/ZendevStudio/POS-Release/releases/download/v1.44.2/zendevpos-update.zip",
-  "npmInstall": false
+  "version": "1.45.1",
+  "notes": "v1.45.1\n- 新安装默认旗舰界面:DEFAULT_SETTINGS.uiSkin = 'flagship'。只影响全新安装(本机还没有保存过数据);已在用的店升级后沿用原来保存的设置,不会被切换。随时可在 后台 → 店铺信息 →「界面风格」改回经典,或在旗舰点单页 后台▾ →「切回经典界面」。",
+  "zip": "https://github.com/ZendevStudio/POS-Release/releases/download/v1.45.1/zendevpos-update.zip",
+  "npmInstall": false,
+  "publishedAt": "2026-09-27T16:20:13.240Z"
 }
