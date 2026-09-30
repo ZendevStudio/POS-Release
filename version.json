@@ -1,7 +1,7 @@
 {
-  "version": "1.50.0",
-  "notes": "v1.50.0 新增（总后台:概览 + 版本发布 页)\n\n- 总后台新增「概览」页(zendev-cloud/admin/,总后台登录后的首页):店铺总数、现在在线、正常营业、等待激活、今日在线单/预约;30 天内到期、已过期(只读)、已停用、活跃代理;按行业分布;以及「需要关注」清单(已过期/已停用/快到期的店,点进详情)。数据全部来自现有 stores/online_orders/profiles,无需改数据库。\n- 总后台新增「版本发布」页:汇总各店收银主机在跑的版本(stores.host_version),算出「在跑的最新版本」,标出已是最新 / 版本落后 / 未上报,方便催店里升级。只读页;发版仍是「推 v* 标签 → GitHub Actions 编译发 POS-Release → 门店后台一键升级」。\n- 代码:admin/src/AdminPages.jsx 新增 OverviewPage/ReleasePage(含 cmpVer 语义化版本比较);admin/src/App.jsx 加导航与路由,总后台首页改为「概览」(代理仍是店铺列表)。",
-  "zip": "https://github.com/ZendevStudio/POS-Release/releases/download/v1.50.0/zendevpos-update.zip",
+  "version": "1.55.0",
+  "notes": "v1.55.0 折扣/改价 服务端授权 + 审计(Round 1 之二;大改)\n\n- 折扣不超过本身(硬钳,reducer 层):整单折扣≤小计、单条折扣≤该菜、单条改价≤原价且不为负——直接 dispatch 也绕不过(UPDATE_LINE_PRICE 加 Math.max(0,...);整单/单条折扣 calcOrder 已封顶)。改价页降价超额明确报错,不再静默削成 0。\n- 授权:店级开关 settings.priceAuth(默认「全员」)。后台 → 设备账号 → 敏感操作权限卡片里可切「仅店长/全员」。\n  - 全员:不用 PIN、不打断,但每笔照样写审计。\n  - 仅店长:折扣/改价要经理 PIN——在线由主机 /api/authz/price 服务端核验(用主机自己的员工表 + 同格式 sha256(salt:pin),不信任被篡改的前端);离线回退本地 verifyStaffPin,标「待复核」。\n  - 某折扣单独标 needAuth 的,即使全员模式也要 PIN。\n- 追加式审计 priceAudits(append-only,同步到主机、绝不改写已结单):每笔记 时间/类型/单号/项目/前后金额/原因/操作人/授权人/verified(主机核验·待复核·免授权)/设备。多机/离线按 id 求并集不丢。\n- 审计报表:后台 → 报表 → 「折扣/改价记录」,按营业日区间查,离线未复核高亮「待复核」。\n- 顺带:客户端合并共享数据时对 append-only 集合(含 priceAudits)按 id 求并集;主机 listClosedRecent 排除已作废单的路径修正(读 d.shared.voidedOrders.v)。",
+  "zip": "https://github.com/ZendevStudio/POS-Release/releases/download/v1.55.0/zendevpos-update.zip",
   "npmInstall": false,
-  "publishedAt": "2026-09-29T05:20:54.537Z"
+  "publishedAt": "2026-09-30T17:31:57.668Z"
 }
