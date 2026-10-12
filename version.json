@@ -1,7 +1,7 @@
 {
-  "version": "1.62.0",
-  "notes": "v1.62.0 工位外设绑定 + 主机直连 PAX + 端口 5188 + 刷卡安全修复\n\n- 工位总览(新):后台 → 设备硬件 → 工位总览,一行一个工位(设备账号),点选这台旁边的收据机和刷卡机。收据先打本工位那台(钱箱跟着它),没绑 / 被删就打所有收据机(和以前一样);改绑后在线的那台马上生效(主机推 account:updated)。\n- 本店刷卡机清单(方案 B):刷卡终端页里,店长集中登记全店刷卡机(PAX / Bolt / CodePay,名字 + IP·端口·TCP/HTTP / HSN / SN);超过 30 天没成交的灰显(从没用过的不灰)。删被工位绑着的机器先提示;刷卡终端页保存不再往主机推终端(旧页退役)。分机只读接口 GET /api/terminals(不含任何凭据)。\n- 主机直连 PAX:主机自己说 POSLink(TCP 默认 / HTTP 可选),分机、平板、手机不用装硬件桥。刷卡终端页「PAX 连接方式」可切回本机硬件桥;老店默认不变。\n- 刷卡绝不静默换台:本工位刷卡机连不上(扣款前敲端口 2.5 秒)→ 报「未连接」不扣款;绑的被删 → 报「不存在或已删除」;收银员可以这一笔手动换一台。绑了哪类刷卡机就走哪类。\n- 修:PAX 连不上时「演示批准」:以前硬件桥没开 / PAX 连不上,单子会被记成刷卡已付(随机卡号、授权码),其实没扣钱。现在报错;只有开了「演示收款」才模拟。调小费同理。\n- 修:菜品有备注时小票打不出(打印程序报错)。\n- 修:作废已结账单:Bolt / CodePay 的单以前被发给本机 PAX 作废,作废不到卡上;现在按主机流水号回原来的刷卡机。\n- 端口改成 5188(8080 是很多软件的默认端口,容易撞):分机新地址 http://<主机IP>:5188。主机 8080 有空就顺带也开着,老书签、签到台照样能用(同一个程序、同一套数据、实时同步也通);8080 被别的程序占了也不报错;5188 被占时退回只开 8080。启动脚本(Windows bat / vbs / 开机自启、Mac)认 5188 或 8080 在跑就不再开第二个主机,优先打开 5188。⚠️ 浏览器按「地址 + 端口」分开存本机资料:主机那台电脑第一次打开 5188 要重新输一次设备密码,本机的界面语言 / 设备模式要重选;分机继续用老书签就不受影响,想换新地址的也一样要重登一次。\n- 新测试:port.test.js、poslink.test.js、paxServer.smoke.js、terminalList.test.js、deviceBinding.test.js、bindableTargets.test.js、sessionDeviceId.test.js、terminalSale.test.js;多设备 §S-6。设计 docs/station-device-binding-design.md v3.2。",
-  "zip": "https://github.com/ZendevStudio/POS-Release/releases/download/v1.62.0/zendevpos-update.zip",
+  "version": "1.62.2",
+  "notes": "v1.62.2 找单红点 = 今天没结的单 + 之前的单单独提示 + 安装位置防呆\n\n> 店主 2026-10-11 定。上营业店的改为 v1.62.2(包含 v1.62.1 全部内容);测试店按第 9 + 10 节测。\n\n- 找单按钮的红色数字 = 今天开、还没结账的单数(今天还有几单没收钱;空单不算)。\n- 橙色提示「昨天或更早有 N 张单没结账,请处理」只在有昨天或更早没结的单时出现:手机在点菜页顶部,电脑在找单按钮旁边(电脑以前没有这个提示)。点一下进找单「未结账」,按日期分组处理。营业日按凌晨 4 点分界。\n- 安装位置防呆:安装包被解压进 ZenDevPOS\\zendev-master\\ 里面(多出一层 zendev-master\\zendev-master)时 —— 启动器(Windows vbs / bat、Mac command)弹窗说明并停下,不改桌面图标和开机自启;主机程序本身也会认出来,不读不写任何数据,只在 5188 / 8080 显示「安装位置不对」页和改法。2026-10-11 测试店发生两次:启动器悄悄跑了那份空拷贝(空数据、没连平台)。开发调试要在这种位置跑,设 ZD_ALLOW_NESTED=1。\n- 新测试:installCheck.test.js;openOrders.test.js、多设备 §S-7 按新规则更新。",
+  "zip": "https://github.com/ZendevStudio/POS-Release/releases/download/v1.62.2/zendevpos-update.zip",
   "npmInstall": false,
-  "publishedAt": "2026-10-11T19:37:55.649Z"
+  "publishedAt": "2026-10-12T18:01:38.936Z"
 }
