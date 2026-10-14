@@ -1,7 +1,7 @@
 {
-  "version": "1.62.2",
-  "notes": "v1.62.2 找单红点 = 今天没结的单 + 之前的单单独提示 + 安装位置防呆\n\n> 店主 2026-10-11 定。上营业店的改为 v1.62.2(包含 v1.62.1 全部内容);测试店按第 9 + 10 节测。\n\n- 找单按钮的红色数字 = 今天开、还没结账的单数(今天还有几单没收钱;空单不算)。\n- 橙色提示「昨天或更早有 N 张单没结账,请处理」只在有昨天或更早没结的单时出现:手机在点菜页顶部,电脑在找单按钮旁边(电脑以前没有这个提示)。点一下进找单「未结账」,按日期分组处理。营业日按凌晨 4 点分界。\n- 安装位置防呆:安装包被解压进 ZenDevPOS\\zendev-master\\ 里面(多出一层 zendev-master\\zendev-master)时 —— 启动器(Windows vbs / bat、Mac command)弹窗说明并停下,不改桌面图标和开机自启;主机程序本身也会认出来,不读不写任何数据,只在 5188 / 8080 显示「安装位置不对」页和改法。2026-10-11 测试店发生两次:启动器悄悄跑了那份空拷贝(空数据、没连平台)。开发调试要在这种位置跑,设 ZD_ALLOW_NESTED=1。\n- 新测试:installCheck.test.js;openOrders.test.js、多设备 §S-7 按新规则更新。",
-  "zip": "https://github.com/ZendevStudio/POS-Release/releases/download/v1.62.2/zendevpos-update.zip",
+  "version": "1.62.5",
+  "notes": "v1.62.5 自动更新「重启主机」热修(Windows)——更新链路基础设施修复【本版出包主因】\n\n- 更新链路热修(本版出包主因): 自助「软件更新」在 Windows 上重启主机会「主机重启超时」、升级卡住等人工救。根因:重启走 start-master.bat 的裸 node,在更新 / GUI 这种后台上下文里 PATH 常没有 node → 新主机起不来、而旧进程已 exit → 双端口 refused。改为用当前 node 的绝对路径(process.execPath)直接起 src/server.js,绕开 PATH、不经过 start-master.bat,和 Mac 分支对齐(updater.restartSpawnArgs;测试 updaterRestart.test.js)。\n  - 无法自愈(务必知道): 仍在旧版本上的门店走自动更新升到本版时,重启那步跑的还是旧 updater,仍会失败、需手动救活一次;从本版起之后的更新才全链路自愈。\n- 随版带上(早已在树、闸全绿,非新功能车):\n  - 营业日(原 1.62.3): 找单 / 总览 / 支出 / 技师业绩 / 未结单的「今天」统一按营业日(后台「营业日分界」,默认凌晨 4 点)。\n  - AdminScreen 拆分 + 删死代码(原 1.62.4): 6946 行的 AdminScreen 按后台页拆成独立文件(纯搬不改);清掉 40 处死代码。纯结构 / 清理,无行为变化。\n  - 补修拆分遗漏的 3 个测试: terminalI18n / openOrders / paymentTerminals 原写死读 AdminScreen.js 里已搬走的函数,改指到新位置(admin/hardware.js、admin/overview.js),门闸恢复全绿。",
+  "zip": "https://github.com/ZendevStudio/POS-Release/releases/download/v1.62.5/zendevpos-update.zip",
   "npmInstall": false,
-  "publishedAt": "2026-10-12T18:01:38.936Z"
+  "publishedAt": "2026-10-14T16:30:28.851Z"
 }
