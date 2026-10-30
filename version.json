@@ -1,7 +1,7 @@
 {
-  "version": "1.67.5",
-  "notes": "v1.67.5 报表员工页技师业绩 / 小费修正(店主 2026-10-30「改到 1675」)\n\n- 修:后台 → 报表 → 员工(和销售报表里的「技师 业绩 / 小费」、「小费」明细)技师一栏全是 $0:报表调提成核心时把营业日回成空字符串,核心当成「没有营业日」把每张单都跳过了。报表的单子本来就按所选日期筛过,改成直接算。现在按行算业绩 / 提成;小费有手动分配按分配(没分完的归店,不算任何技师),没分配按业绩比例。screens/admin/overview.js。\n- 测试:新哨兵 fix1675.test.js(4 项,先复现 $0 再验修正)。",
-  "zip": "https://github.com/ZendevStudio/POS-Release/releases/download/v1.67.5/zendevpos-update.zip",
+  "version": "1.67.6",
+  "notes": "v1.67.6 在建(1.67.5 已发布;店主 2026-10-30:之后的测试修改都进 1.67.6,店主说之前不升 1.67.7)\n\n> 注:前两条 CodePay 改动 16:15 已写进开发机,如果 1.67.5 发布时开发机已 build 过它们,1.67.5 里也带着;以 1.67.6 为准。\n\n- 修:PAX + CodePay 混用的店填不了 CodePay 凭据:「CodePay 云开放接口凭据」(App ID / 商户号 / 私钥)原来只有全店默认刷卡方式点成 CodePay 才露出;店里默认 PAX、另登记一台 CodePay 时没地方填 App ID → 刷卡报「未配置 CodePay」。现在清单里有 CodePay 刷卡机就显示这块(写明默认方式不用改,绑了 CodePay 的工位自动走 CodePay)。screens/admin/hardware.js。\n- CodePay 没填全时的提示:从「未配置 CodePay(base/appId/merchantNo)」改成写明缺哪项 + 去哪填(后台 → 设备硬件 → 刷卡终端 → CodePay 云开放接口凭据)。zendev-master/src/codepay.js。\n- 修:「保存并测试 CodePay 连通」/ 刷卡机「测试」报 [SYS404]not found:原来测连通用「查开放批次」接口,有的 App 没开这个接口,网关回 SYS404,看起来像凭据错。改成查一笔不存在的测试单(下单 / 轮询本来就走 order.query,一定在):应答「订单不存在」= 凭据和签名都通过;签名 / 鉴权错才报「凭据不对」;连不上才报连不上。新路由 /api/codepay/ping,codepay.ping()。\n- 新:CodePay App ID + 私钥用平台默认,新店只填 商户号 + SN(店主 2026-10-30 定:整个 POS 是 CodePay 的一个 App,所有店共用):\n  - 云端新云函数 platform-config(只认门店主机账号):从 Supabase Secrets ZD_CODEPAY_APP_ID / ZD_CODEPAY_PRIVATE_KEY 发给主机;私钥不进代码 / 聊天。\n  - 主机开机、每 6 小时、打开刷卡终端页、刷卡时缺 App ID 都会去领(10 分钟内不重复),单独存 codepayPlatform,店里保存设置不会把它写进去;云备份去敏不带私钥。店里没填自己的 App ID → 整套用平台的(App ID + 私钥 + RSA2);填了 → 整套用本店的(清空就回平台)。\n  - 后台凭据框:顶上一行写现在用的是平台默认 / 本店自己的 / 还没领到;App ID 显示「平台默认 wz…」,私钥框锁住写「平台默认 · 已配置」;新增「刷卡机 SN」(商户号后面、门店号前面),店里只有 0 / 1 台 CodePay 时填这里就自动登记 / 改那一台,多台在清单里填。\n  - 测试:新 codepayPlatform.test.js(9 项)。\n- 修:CodePay 真刷报「[SYS013]parameter error:tip_amount」,卡机不弹金额:推单带 tip_amount(真机上 0 和 0.01 都被拒)。现在推单不带 tip_amount,小费并进 order_amount 一起收(本地流水照旧分开记本金 / 小费,作废按整笔撤);退款 0 小费也不带;所有金额统一成 2 位小数。zendev-master/src/codepay.js。新哨兵 fix1676.test.js(本地假网关看实际发出去的参数)。\n- 测试:fix1675.test.js 加 CodePay 凭据框 / 提示 / 本地假网关测连通判定(共 7 项);terminalProbe.test.js 跟着改。",
+  "zip": "https://github.com/ZendevStudio/POS-Release/releases/download/v1.67.6/zendevpos-update.zip",
   "npmInstall": false,
-  "publishedAt": "2026-10-30T20:04:44.444Z"
+  "publishedAt": "2026-10-30T21:08:56.223Z"
 }
