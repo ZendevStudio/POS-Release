@@ -1,7 +1,7 @@
 {
-  "version": "1.67.19",
-  "notes": "v1.67.19 热修:旗舰版点菜加选项后黑屏 + 旗舰菜名跟语言显示第二名(店主 2026-11-13)\n\n> 紧急热修 1.67.18 的两个问题(都在 24.30 第二语言那块):\n> - 黑屏崩溃:旗舰版点一道带选项的菜、选完点「加入」→ 黑屏。原因:FlagshipOrder.jsx 的 Line 子组件里渲染选项文字用了 lang,但 lang 不是 Line 的 prop(undefined)→ ReferenceError。改用 getDeviceLang()(不依赖作用域)。\n> - 旗舰菜名不跟语言:旗舰菜单格子菜名永远第一名(英文)大字、第二名小字,不跟界面语言。现改成非英文(中/西)→ 第二名称当主(和 POSScreen 的 displayName 一致)。FlagshipOrder.jsx。\n> 纯前端,升级刷新即可。",
-  "zip": "https://github.com/ZendevStudio/POS-Release/releases/download/v1.67.19/zendevpos-update.zip",
+  "version": "1.67.20",
+  "notes": "v1.67.20 退款功能(24.63)落地:按比例退回原支付方式(店主 2026-11-13)\n\n> 退款(24.63)走通了 —— 店主定稿「先上 Path A」:按比例退回原支付方式(Toast / Square 的「原路退回」做法)。\n> - 入口:退款键只在「单据详情」里(找单列表外面不给),要「退款」权限 / 店长 PIN —— 和作废同一套。ClosedDetailModal.jsx 加 ↩ 退款 键、POSScreen.js 加 openRefund / doRefund。\n> - 怎么退:RefundModal.jsx 选「按菜退 / 按金额退」→ 显示这笔按比例退回原支付方式的计划(店内信用 + 现金 + 每张卡各退多少),确认即退。显示 = 实际执行,不会对不上。\n> - 动钱分两步,安全:① 刷卡部分走已有的、测过的 /api/terminal/void(当天未结批、整笔 → 作废)或 /api/terminal/refund(部分 / 已结批 / 退过 → 关联原交易退款,挂 txnId,不盲退);任一张卡没成功 → 整笔中止、不记账(钱的状态保持原样,叫店员重试或去「信用卡中心」)。② 全成功再 dispatch REFUND_ORDER —— 复用久经测试的退款 reducer:记一条退款流水、按比例原路退回店内信用(礼卡 / 储值 / 积分)、累计封顶不超原付额、整单退时次卡次数也退回。\n> - 为什么按比例不是「店内信用优先」:店主图上要「积分 / 礼卡 / 余额先退满」(greedy)。那要改主机也共用的会员流水核心(积分 $↔分数换算 + 得分冲回),风险高。本版先上按比例(和 REFUND_ORDER 内部一致、美国软件常规做法、单笔 / 整单退结果完全一样,只有「混合支付 + 部分退」时分摊不同),安全、马上能用;「店内信用优先」留作下一版、单独带测试做。\n> - CodePay 也支持:Void(trans_type=2,挂原交易)+ Refund(payments.refund,挂 transNo)—— 和 PAX / Bolt 同一套 /api/terminal/* 入口;真机状态码留 agent 机对真 CodePay 机确认(不盲改支付)。\n> - 新增纯函数:services/refundCore.js(planProportional 按比例分摊 + 卡 Void/Refund 判断)、services/refundTenders.js(从已结账单抽各 tender);REFUND_ORDER 支持「按金额退」(action.amount)。新单测:refundCore.test.js(+7 比例退用例)。\n> 纯前端 + 复用现有主机接口,升级刷新即可;不用跑 SQL、不用部署云函数。真卡退款请在 agent 机对真刷卡机测(网关那步只有真机能验)。",
+  "zip": "https://github.com/ZendevStudio/POS-Release/releases/download/v1.67.20/zendevpos-update.zip",
   "npmInstall": false,
-  "publishedAt": "2026-11-13T19:07:04.299Z"
+  "publishedAt": "2026-11-13T20:46:34.259Z"
 }
